@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Edit "{{ patients['name'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="name">Name</label>
+    <input name="name" id="name" value="{{ request.form['name'] or patients['name'] }}" required>
+    <select id="sex" name="sex">
+        <option value="male">male</option>
+        <option value="female">female</option>
+    </select>
+    <label for="age">Age</label>
+    <input name="age" id="age" value="{{ request.form['age'] or patients['age'] }}" required>
+    <label for="description">Description</label>
+    <textarea name="description" id="description">{{ request.form['description'] or patients['description'] }}</textarea>
+
+    <input type="submit" value="Save">
+  </form>
+  <hr>
+  <form action="{{ url_for('blog.delete', id=patients['id']) }}" method="post">
+    <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+  </form>
+  <a href="{{ url_for('blog.index') }}">Back</a>
+{% endblock %}

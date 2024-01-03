@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}New Post{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <select id="criteria_1" name="criteria_1">
+        <option value="name">Name</option>
+        <option value="sex">Sex</option>
+        <option value="age">Age</option>
+    </select>
+    <input name="criteria_1_value" id="criteria_1_value" required>
+
+    <select id="criteria_2" name="criteria_2">
+        <option value="name">Name</option>
+        <option value="sex">Sex</option>
+        <option value="age">Age</option>
+    </select>
+    <input name="criteria_2_value" id="criteria_2_value">
+
+    <input type="submit" value="Search">
+  </form>
+  <a href="{{ url_for('blog.index') }}">Back</a>
+{% endblock %}

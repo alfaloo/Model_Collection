@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Add Patient{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="name">Name</label>
+    <input name="name" id="name" value="{{ request.form['name'] }}" required>
+    <select id="sex" name="sex">
+        <option value="male">male</option>
+        <option value="female">female</option>
+    </select>
+    <label for="age">Age</label>
+    <input name="age" id="age" value="{{ request.form['age'] }}" required>
+    <label for="description">Description</label>
+    <textarea name="description" id="description">{{ request.form['description'] }}</textarea>
+    <input type="submit" value="Save">
+  </form>
+  <a href="{{ url_for('blog.index') }}">Back</a>
+{% endblock %}
