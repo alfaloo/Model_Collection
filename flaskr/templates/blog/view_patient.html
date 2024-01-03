@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}View "{{ patient['name'] }}"{% endblock %}</h1>
+  <a class="action" href="{{ url_for('blog.add_diagnosis', patient_id=patient['id']) }}">New Diagnosis</a>
+{% endblock %}
+
+{% block content %}
+        <div>
+          <h1>{{ patient['name'] }}</h1>
+          <p>Sex: {{ patient['sex'] }}</p>
+          <p>DOB: {{ patient['date_of_birth'] }}</p>
+          <p>Phone: {{ patient['phone'] }}</p>
+          <p>Address: {{ patient['address'] }}</p>
+        </div>
+        <div>
+        {% for d in diagnosis %}
+        <article class="patient">
+          <header>
+            <div>
+              <hr>
+              <h3>{{ d['category'] }}</h3>
+              <p>{{ d['description'] }}</p>
+              <div class="about">by {{ d['username'] }} on {{ d['created'].strftime('%Y-%m-%d') }}</div>
+            </div>
+            {% if g.user['id'] == d['author_id'] %}
+              <a class="action" href="{{ url_for('blog.update_diagnosis', diagnosis_id=d['id']) }}">Edit</a>
+            {% endif %}
+          </header>
+        </article>
+        {% endfor %}
+        </div>
+{% endblock %}

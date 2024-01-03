@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Edit "{{ diagnosis['category'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="category">Category</label>
+    <input name="category" id="category" value="{{ request.form['category'] or diagnosis['category'] }}" required>
+    <label for="description">Description</label>
+    <textarea name="description" id="description">{{ request.form['description'] or diagnosis['description'] }}</textarea>
+    <input type="submit" value="Save">
+  </form>
+  <hr>
+  <form action="{{ url_for('blog.delete_diagnosis', diagnosis_id=diagnosis['id']) }}" method="post">
+    <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+  </form>
+  <a href="{{ url_for('blog.view_patient', patient_id=diagnosis['patient_id']) }}">Back</a>
+{% endblock %}
