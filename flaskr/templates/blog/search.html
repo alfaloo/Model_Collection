@@ -6,24 +6,20 @@
 
 {% block content %}
   <form method="post">
-    <select id="criteria_1" name="criteria_1">
-        <option value="name">Name</option>
-        <option value="sex">Sex</option>
-        <option value="date_of_birth">Date of Birth</option>
-        <option value="phone">Phone</option>
-        <option value="address">Address</option>
-
+    <label for="name">Name</label>
+    <input name="name" id="name" value="{{ request.form['name'] }}">
+    <label for="sex">Sex</label>
+    <select id="sex" name="sex">
+        <option value="empty"></option>
+        <option value="male">male</option>
+        <option value="female">female</option>
     </select>
-    <input name="criteria_1_value" id="criteria_1_value" required>
-
-    <select id="criteria_2" name="criteria_2">
-        <option value="name">Name</option>
-        <option value="sex">Sex</option>
-        <option value="date_of_birth">Date of Birth</option>
-        <option value="phone">Phone</option>
-        <option value="address">Address</option>
-    </select>
-    <input name="criteria_2_value" id="criteria_2_value">
+    <label for="date_of_birth">Date of Birth</label>
+    <input type="date" name="date_of_birth" id="date_of_birth" value="{{ request.form['date_of_birth'] }}">
+    <label for="phone">Phone</label>
+    <input name="phone" id="phone" value="{{ request.form['phone'] }}">
+    <label for="address">Address</label>
+    <input name="address" id="address" value="{{ request.form['address'] }}">
 
     <input type="submit" value="Search">
   </form>

@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from flask_migrate import migrate
+from flask_migrate import Migrate
 
 # flask --app flaskr run --debug
 

@@ -57,23 +57,43 @@ def add_patient():
 @login_required
 def search():
     if request.method == 'POST':
-        criteria_1 = request.form['criteria_1']
-        criteria_1_value = request.form['criteria_1_value']
-        double_criteria = False
-        criteria_2 = None
-        criteria_2_value = None
+        name = request.form['name']
+        sex = request.form['sex']
+        date_of_birth = request.form['date_of_birth']
+        phone = request.form['phone']
+        address = request.form['address']
+        empty_search = True;
 
-        if request.form['criteria_2_value'] != "":
-            double_criteria = True
-            criteria_2 = request.form['criteria_2']
-            criteria_2_value = request.form['criteria_2_value']
+        query = 'SELECT * FROM patient p WHERE'
+        if name:
+            empty_search = False;
+            query += f' name = "{name}" AND'
+        if sex != "empty":
+            empty_search = False;
+            query += f' sex = "{sex}" AND'
+        if date_of_birth:
+            empty_search = False;
+            query += f' date_of_birth = "{date_of_birth}" AND'
+        if phone:
+            empty_search = False;
+            query += f' phone = "{phone}" AND'
+        if address:
+            empty_search = False;
+            query += f' address = "{address}" AND'
+
+        query = query[:-3]
 
         db = get_db()
-        query = f'SELECT * FROM patient WHERE {criteria_1} = "{criteria_1_value}"'
-        if double_criteria:
-            query += f' AND {criteria_2} = "{criteria_2_value}"'
-        query += ' ORDER BY name DESC;'
-        patients = db.execute(query).fetchall()
+        if empty_search:
+            patients = db.execute(
+                'SELECT p.id, name, sex, date_of_birth, phone, address'
+                ' FROM patient p'
+                ' ORDER BY name ASC'
+            ).fetchall()
+        else:
+            query += 'ORDER BY name DESC;'
+            patients = db.execute(query).fetchall()
+
         return render_template('blog/index.html', patients=patients)
 
     return render_template('blog/search.html')

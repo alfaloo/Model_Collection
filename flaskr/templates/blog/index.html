@@ -12,7 +12,7 @@
       <header>
         <div>
           <h1>{{ patient['name'] }}</h1>
-          <p>sex: {{ patient['sex'] }}, DOB: {{ patient['date_of_birth'] }}</p>
+          <p>Sex: {{ patient['sex'] }}, DOB: {{ patient['date_of_birth'] }}</p>
         </div>
         {% if g.user['is_admin'] == 1 %}
           <a class="action" href="{{ url_for('blog.update_patient', patient_id=patient['id']) }}">Edit</a>

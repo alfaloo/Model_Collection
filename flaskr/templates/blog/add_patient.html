@@ -8,12 +8,13 @@
   <form method="post">
     <label for="name">Name</label>
     <input name="name" id="name" value="{{ request.form['name'] }}" required>
+    <label for="sex">Sex</label>
     <select id="sex" name="sex">
         <option value="male">male</option>
         <option value="female">female</option>
     </select>
     <label for="date_of_birth">Date of Birth</label>
-    <input name="date_of_birth" id="date_of_birth" value="{{ request.form['date_of_birth'] }}" required>
+    <input type="date" name="date_of_birth" id="date_of_birth" value="{{ request.form['date_of_birth'] }}" required>
     <label for="phone">Phone</label>
     <input name="phone" id="phone" value="{{ request.form['phone'] }}" required>
     <label for="address">Address</label>
