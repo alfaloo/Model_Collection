@@ -1,20 +1,24 @@
 import os
+import pymysql
 
 from flask import Flask, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_migrate import Migrate
+from config import Config
+
+from . import db
+from . import auth
+from . import blog
 
 # flask --app flaskr run --debug
 
 def create_app(test_config=None):
     # create and configure the app
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'dev'
 
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
-    )
+    db.init_app(app)
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -29,13 +33,8 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    from . import db
-    db.init_app(app)
-
-    from . import auth
     app.register_blueprint(auth.bp)
 
-    from . import blog
     app.register_blueprint(blog.bp)
     app.add_url_rule('/', endpoint='index')
 

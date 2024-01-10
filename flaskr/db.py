@@ -1,17 +1,32 @@
-import sqlite3
+import pymysql
 import click
 from flask import current_app, g
 
 
 def get_db():
     if 'db' not in g:
-        g.db = sqlite3.connect(
-            current_app.config['DATABASE'],
-            detect_types=sqlite3.PARSE_DECLTYPES
-        )
-        g.db.row_factory = sqlite3.Row
+        g.db = pymysql.connect(
+            host='localhost',
+            database='iex',
+            user='root',
+            password='',
+            charset='utf8mb4',
+            cursorclass=pymysql.cursors.DictCursor)
 
     return g.db
+
+def db_query(query, param=None):
+    db = get_db();
+    cursor = db.cursor();
+    if param is None:
+        cursor.execute(query);
+    else:
+        cursor.execute(query, param);
+    return cursor
+
+def db_commit(query, param):
+    db_query(query, param).close()
+    get_db().commit()
 
 
 def close_db(e=None):

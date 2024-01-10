@@ -6,7 +6,7 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.exceptions import abort
 
-from flaskr.db import get_db
+from flaskr.db import get_db, db_query, db_commit
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -20,6 +20,7 @@ def register():
         confirmation = request.form['confirmation']
         is_admin = 1 if 'is_admin' in request.form else 0;
         db = get_db()
+        cursor = db.cursor()
         error = None
 
         if not username:
@@ -33,11 +34,9 @@ def register():
 
         if error is None:
             try:
-                db.execute(
-                    "INSERT INTO user (username, password, is_admin) VALUES (?, ?, ?)",
-                    (username, generate_password_hash(password), is_admin),
-                )
-                db.commit()
+                query = "INSERT INTO user (username, password, is_admin) VALUES (%s, %s, %s)"
+                param = (username, generate_password_hash(password), is_admin)
+                db_commit(query, param)
             except db.IntegrityError:
                 error = f"User {username} is already registered."
             else:
@@ -52,11 +51,10 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        db = get_db()
+        query = 'SELECT * FROM user WHERE username = %s'
+        param = (username,)
+        user = db_query(query, param).fetchone()
         error = None
-        user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (username,)
-        ).fetchone()
 
         if user is None:
             error = 'Incorrect username.'
@@ -79,9 +77,12 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = get_db().execute(
-            'SELECT * FROM user WHERE id = ?', (user_id,)
-        ).fetchone()
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute(
+            'SELECT * FROM user WHERE id = %s', (user_id,)
+        )
+        g.user = cursor.fetchone()
 
 @bp.route('/logout')
 def logout():

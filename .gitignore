@@ -1,5 +1,6 @@
-.venv
+.venv/
 .env
 .DS_Store
 .idea
 flaskr/__pycache__
+instance/
