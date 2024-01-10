@@ -3,4 +3,4 @@
 .DS_Store
 .idea
 flaskr/__pycache__
-instance/
+instance/flaskr.sqlite
