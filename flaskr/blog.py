@@ -4,15 +4,14 @@ from flask import (
 from werkzeug.exceptions import abort
 
 from flaskr.auth import login_required
-from flaskr.db import get_db, db_query, db_commit
+from .models import User, Patient, Diagnosis, db
 
 bp = Blueprint('blog', __name__)
 
 @bp.route('/')
 @login_required
 def index():
-    query = """SELECT id, name, sex, date_of_birth, phone, address FROM patient ORDER BY name ASC"""
-    patients = db_query(query).fetchall()
+    patients = Patient.query.order_by(Patient.name).all()
     return render_template('blog/index.html', patients=patients)
 
 @bp.route('/add_patient', methods=('GET', 'POST'))
@@ -38,10 +37,9 @@ def add_patient():
         if error is not None:
             flash(error)
         else:
-            query = """INSERT INTO patient (name, sex, date_of_birth, phone, address)
-            VALUES (%s, %s, %s, %s, %s)"""
-            param = (str(name), str(sex), str(date_of_birth), str(phone), str(address))
-            db_commit(query, param)
+            new_patient = Patient(name=str(name), sex=str(sex), date_of_birth=str(date_of_birth), phone=str(phone), address=str(address))
+            db.session.add(new_patient)
+            db.session.commit()
             return redirect(url_for('blog.index'))
 
     return render_template('blog/add_patient.html')
@@ -55,45 +53,27 @@ def search():
         date_of_birth = request.form['date_of_birth']
         phone = request.form['phone']
         address = request.form['address']
-        empty_search = True;
 
-        query = 'SELECT * FROM patient p WHERE'
+        query = Patient.query.order_by(Patient.name)
+
         if name:
-            empty_search = False;
-            query += f' name = "{name}" AND'
-        if sex != "empty":
-            empty_search = False;
-            query += f' sex = "{sex}" AND'
+            query = query.filter_by(name = name)
+            print('yes')
+        if sex != "":
+            query = query.filter_by(sex = sex)
         if date_of_birth:
-            empty_search = False;
-            query += f' date_of_birth = "{date_of_birth}" AND'
+            query = query.filter_by(date_of_birth = date_of_birth)
         if phone:
-            empty_search = False;
-            query += f' phone = "{phone}" AND'
+            query = query.filter_by(phone = phone)
         if address:
-            empty_search = False;
-            query += f' address = "{address}" AND'
+            query = query.filter_by(address = address)
 
-        query = query[:-3]
-
-        db = get_db()
-        if empty_search:
-            query = 'SELECT p.id, name, sex, date_of_birth, phone, address'
-            ' FROM patient p'
-            ' ORDER BY name ASC'
-            patients = db_query(query).fetchall()
-        else:
-            query += 'ORDER BY name DESC;'
-            patients = db_query(query).fetchall()
-
-        return render_template('blog/index.html', patients=patients)
+        return render_template('blog/index.html', patients=query.all())
 
     return render_template('blog/search.html')
 
 def get_patient(patient_id):
-    query = """SELECT p.id, name, sex, date_of_birth, phone, address FROM patient p WHERE p.id = %s"""
-    param = (patient_id)
-    patient = db_query(query, param).fetchone()
+    patient = Patient.query.get(patient_id)
 
     if patient is None:
         abort(404, f"Patient id {patient_id} doesn't exist.")
@@ -103,7 +83,7 @@ def get_patient(patient_id):
 @bp.route('/update_patient/<int:patient_id>', methods=('GET', 'POST'))
 @login_required
 def update_patient(patient_id):
-    if  g.user['is_admin'] == 0:
+    if g.user.is_admin == 0:
         abort(403)
 
     patient = get_patient(patient_id)
@@ -128,21 +108,27 @@ def update_patient(patient_id):
         if error is not None:
             flash(error)
         else:
-            query = """UPDATE patient SET name = %s, sex = %s, date_of_birth = %s, phone = %s, address = %s
-            WHERE id = %s"""
-            param = (str(name), str(sex), str(date_of_birth), str(phone), str(address), str(patient_id))
-            db_commit(query, param)
+            Patient.query.filter_by(id=patient_id).update(
+                {"name": name, "sex": sex, "date_of_birth": date_of_birth, "phone": phone, "address": address}
+            )
+            db.session.commit()
             return redirect(url_for('blog.index'))
 
     return render_template('blog/update_patient.html', patient=patient)
 
-@bp.route('/delte_patient/<int:patient_id>', methods=('POST',))
+
+@bp.route('/delete_patient/<int:patient_id>', methods=('POST',))
 @login_required
 def delete_patient(patient_id):
-    query = """DELETE FROM patient WHERE id = %s"""
-    param = (patient_id,)
-    db_commit(query, param)
+    patient_to_delete = Patient.query.get(patient_id)
+    if patient_to_delete:
+        db.session.delete(patient_to_delete)
+        db.session.commit()
+        flash(f"Patient {patient_id} deleted successfully", 'success')
+    else:
+        flash(f"Patient with ID {patient_id} not found", 'danger')
     return redirect(url_for('blog.index'))
+
 
 @bp.route('/add_diagnosis/<int:patient_id>', methods=('GET', 'POST'))
 @login_required
@@ -160,28 +146,30 @@ def add_diagnosis(patient_id):
         if error is not None:
             flash(error)
         else:
-            query = """INSERT INTO diagnosis (category, description, author_id, patient_id)
-            VALUES (%s, %s, %s, %s)"""
-            param = (str(category), str(description), g.user['id'], patient_id)
-            db_commit(query, param)
+            new_diagnosis = Diagnosis(
+                category=category,
+                description=description,
+                author_id=g.user.id,
+                patient_id=patient_id
+            )
+            db.session.add(new_diagnosis)
+            db.session.commit()
             return redirect(url_for('blog.view_patient', patient_id=patient_id))
 
     return render_template('blog/add_diagnosis.html', patient_id=patient_id)
 
+
 def get_diagnosis(diagnosis_id, check_author=True):
-    query = """SELECT d.id, category, description, created, author_id, patient_id 
-    FROM diagnosis d JOIN user u ON d.author_id = u.id 
-    WHERE d.id = %s"""
-    param = (diagnosis_id)
-    diagnosis = db_query(query, param).fetchone()
+    diagnosis = Diagnosis.query.get(diagnosis_id)
 
     if diagnosis is None:
         abort(404, f"Patient id {diagnosis_id} doesn't exist.")
 
-    if check_author and diagnosis['author_id'] != g.user['id']:
+    if check_author and diagnosis.author_id != g.user.id:
         abort(403)
 
     return diagnosis
+
 
 @bp.route('/update_diagnosis/<int:diagnosis_id>', methods=('GET', 'POST'))
 @login_required
@@ -201,29 +189,37 @@ def update_diagnosis(diagnosis_id):
         if error is not None:
             flash(error)
         else:
-            query = """UPDATE diagnosis SET category = %s, description = %s 
-            WHERE id = %s"""
-            param = (str(category), str(description), diagnosis_id)
-            db_commit(query, param)
-            return redirect(url_for('blog.view_patient', patient_id=diagnosis['patient_id']))
+            Diagnosis.query.filter_by(id=diagnosis_id).update(
+                {"category": category, "description": description}
+            )
+            db.session.commit()
+            return redirect(url_for('blog.view_patient', patient_id=diagnosis.patient_id))
 
     return render_template('blog/update_diagnosis.html', diagnosis=diagnosis)
+
 
 @bp.route('/view/<int:patient_id>')
 @login_required
 def view_patient(patient_id):
-    query = """SELECT d.id, category, description, created, author_id, patient_id, username
-    FROM diagnosis d JOIN user u ON d.author_id = u.id
-    WHERE d.patient_id = %s ORDER BY created DESC"""
-    param = (patient_id)
-    diagnosis = db_query(query, param).fetchall()
+    diagnosis = (
+        Diagnosis.query.join(User)
+        .filter(Diagnosis.patient_id == patient_id)
+        .order_by(Diagnosis.created.desc()).all()
+    )
     return render_template('blog/view_patient.html', patient=get_patient(patient_id), diagnosis=diagnosis)
+
 
 @bp.route('/delete_diagnosis/<int:diagnosis_id>', methods=('POST',))
 @login_required
 def delete_diagnosis(diagnosis_id):
-    patient_id = get_diagnosis(diagnosis_id)['patient_id']
-    query = """DELETE FROM diagnosis WHERE id = %s"""
-    param = (diagnosis_id,)
-    db_commit(query, param)
+    patient_id = get_diagnosis(diagnosis_id).patient_id
+    diagnosis_to_delete = Diagnosis.query.get(diagnosis_id)
+
+    if diagnosis_to_delete:
+        db.session.delete(diagnosis_to_delete)
+        db.session.commit()
+        flash(f"Diagnosis {diagnosis_id} deleted successfully", 'success')
+    else:
+        flash(f"Diagnosis {diagnosis_id} not found", 'danger')
+
     return redirect(url_for('blog.view_patient', patient_id=patient_id))

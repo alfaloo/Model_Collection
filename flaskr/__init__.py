@@ -1,24 +1,22 @@
 import os
-import pymysql
 
-from flask import Flask, render_template, request, session
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from flask import Flask
 from flask_migrate import Migrate
-from config import Config
 
-from . import db
-from . import auth
-from . import blog
+from .models import db
+from flaskr import auth, blog
+
+migrate = Migrate()
 
 # flask --app flaskr run --debug
-
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/iex'  # Use your actual database URI
     app.config['SECRET_KEY'] = 'dev'
 
     db.init_app(app)
+    migrate.init_app(app, db)
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
