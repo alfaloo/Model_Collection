@@ -127,7 +127,7 @@ def update_patient(patient_id):
     return render_template('blog/update_patient.html', patient=patient)
 
 
-@bp.route('/delete_patient/<int:patient_id>', methods=('POST',))
+@bp.route('/delete_patient/<int:patient_id>', methods=['POST'])
 @login_required
 def delete_patient(patient_id):
     patient_to_delete = Patient.query.get(patient_id)
@@ -181,12 +181,12 @@ def get_diagnosis(diagnosis_id, check_author=True):
     return diagnosis
 
 
-@bp.route('/update_diagnosis/<int:diagnosis_id>', methods=('GET', 'PUT'))
+@bp.route('/update_diagnosis/<int:diagnosis_id>', methods=['GET', 'POST'])
 @login_required
 def update_diagnosis(diagnosis_id):
     diagnosis = get_diagnosis(diagnosis_id)
 
-    if request.method == 'PUT':
+    if request.method == 'POST':
         category = request.form['category']
         description = request.form['description']
         error = None
@@ -221,7 +221,7 @@ def view_patient(patient_id):
     return render_template('blog/view_patient.html', patient=get_patient(patient_id), diagnosis=pagination_collection.items, pagination=pagination_collection.pagination)
 
 
-@bp.route('/delete_diagnosis/<int:diagnosis_id>', methods=('POST',))
+@bp.route('/delete_diagnosis/<int:diagnosis_id>', methods=['POST'])
 @login_required
 def delete_diagnosis(diagnosis_id):
     patient_id = get_diagnosis(diagnosis_id).patient_id
@@ -230,8 +230,8 @@ def delete_diagnosis(diagnosis_id):
     if diagnosis_to_delete:
         db.session.delete(diagnosis_to_delete)
         db.session.commit()
-        flash(f"Diagnosis {diagnosis_id} deleted successfully", 'success')
+        flash(f"Diagnosis deleted successfully", 'success')
     else:
-        flash(f"Diagnosis {diagnosis_id} not found", 'danger')
+        flash(f"Diagnosis not found", 'danger')
 
     return redirect(url_for('blog.view_patient', patient_id=patient_id))

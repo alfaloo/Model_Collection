@@ -24,6 +24,6 @@
       <label class="form-check-label" for="is_admin">Is admin account</label>
     </div>
     <button type="submit" class="btn btn-primary">{% if user.id %} Update {% else %} Create {% endif %}</button>
-    <a  class="btn btn-warning" href="{{ url_for('auth.users') }}">Back</a>
+    <a  class="btn btn-secondary" href="{{ url_for('auth.users') }}">Back</a>
   </form>
 {% endblock %}

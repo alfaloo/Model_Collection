@@ -53,7 +53,7 @@
       <textarea class="form-control" id="address" name="address" rows="3">{{ request.args.get('address', default='') }}</textarea>
     </div>
     <button type="submit" class="btn btn-primary">Search</button>
-    <a class="btn btn-warning" href="{{ url_for('blog.index') }}">Back</a>
+    <a class="btn btn-secondary" href="{{ url_for('blog.index') }}">Back</a>
 </form>
 
 <!--  {% for patient in patients %}-->

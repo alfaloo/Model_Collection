@@ -6,16 +6,31 @@
 
 {% block content %}
   <form method="post">
-    <input type="hidden" name="_method" value="put">
-    <label for="category">Category</label>
-    <input name="category" id="category" value="{{ request.form['category'] or diagnosis['category'] }}" required>
-    <label for="description">Description</label>
-    <textarea name="description" id="description">{{ request.form['description'] or diagnosis['description'] }}</textarea>
-    <input type="submit" value="Save">
+    <div class="mb-3">
+      <label for="category" class="form-label">Category</label>
+      <input name="category" class="form-control" id="category" value="{{ request.form['category'] or diagnosis['category'] }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea name="description" class="form-control" id="description">{{ request.form['description'] or diagnosis['description'] }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a class="btn btn-secondary" href="{{ url_for('blog.view_patient', patient_id=diagnosis['patient_id']) }}">Back</a>
+    <button id="delete_trigger" class="btn btn-danger float-end" type="submit" onclick="return deleteDiagnosis()">Delete</button>
   </form>
   <hr>
-  <form action="{{ url_for('blog.delete_diagnosis', diagnosis_id=diagnosis['id']) }}" method="post">
-    <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+
+  <form id="delete_form" action="{{ url_for('blog.delete_diagnosis', diagnosis_id=diagnosis['id']) }}" method="post">
+
   </form>
-  <a href="{{ url_for('blog.view_patient', patient_id=diagnosis['patient_id']) }}">Back</a>
+
+  <script>
+    deleteDiagnosis = () => {
+      if (confirm('Confirm to delete this diagnosis?')) {
+        document.getElementById('delete_form').submit();
+      }
+
+      return false;
+    }
+  </script>
 {% endblock %}
