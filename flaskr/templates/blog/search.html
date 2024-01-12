@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-  <form method="post">
+  <form method="get">
     <label for="name">Name</label>
     <input name="name" id="name" value="{{ request.form['name'] }}">
     <label for="sex">Sex</label>
@@ -24,4 +24,26 @@
     <input type="submit" value="Search">
   </form>
   <a href="{{ url_for('blog.index') }}">Back</a>
+
+  {% for patient in patients %}
+    <article class="patient">
+      <header>
+        <div>
+          <h1>{{ patient['name'] }}</h1>
+          <p>Sex: {{ patient['sex'] }}, DOB: {{ patient['date_of_birth'] }}</p>
+        </div>
+        {% if g.user['is_admin'] == 1 %}
+          <a class="action" href="{{ url_for('blog.update_patient', patient_id=patient['id']) }}">Edit</a>
+        {% endif %}
+        <a class="action" href="{{ url_for('blog.view_patient', patient_id=patient['id']) }}">View</a>
+      </header>
+      <p class="body">{{ patient['body'] }}</p>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+
+  {{ pagination.links }}
+
 {% endblock %}

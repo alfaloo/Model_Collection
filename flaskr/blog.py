@@ -1,18 +1,27 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
+from flask_paginate import Pagination, get_page_parameter
 from werkzeug.exceptions import abort
+from dotenv import load_dotenv
+import os
 
 from flaskr.auth import login_required
 from .models import User, Patient, Diagnosis, db
+from .pagination_collection import PaginationCollection
+load_dotenv()
 
 bp = Blueprint('blog', __name__)
 
 @bp.route('/')
 @login_required
 def index():
-    patients = Patient.query.order_by(Patient.name).all()
-    return render_template('blog/index.html', patients=patients)
+    builder = Patient.query.order_by(Patient.name)
+    page = request.args.get('page', type=int, default=1)
+
+    pagination_collection = PaginationCollection(builder, page)
+
+    return render_template('blog/index.html', patients=pagination_collection.items, pagination=pagination_collection.pagination, endpoint='blog.index')
 
 @bp.route('/add_patient', methods=('GET', 'POST'))
 @login_required
@@ -47,30 +56,31 @@ def add_patient():
 @bp.route('/search', methods=('GET', 'POST'))
 @login_required
 def search():
-    if request.method == 'POST':
-        name = request.form['name']
-        sex = request.form['sex']
-        date_of_birth = request.form['date_of_birth']
-        phone = request.form['phone']
-        address = request.form['address']
+    name = request.args.get('name', type=str, default=None)
+    sex = request.args.get('sex', type=str, default=None)
+    date_of_birth = request.args.get('date_of_birth', type=str, default=None)
+    phone = request.args.get('phone', type=str, default=None)
+    address = request.args.get('address', type=str, default=None)
 
-        query = Patient.query.order_by(Patient.name)
+    builder = Patient.query.order_by(Patient.name)
 
-        if name:
-            query = query.filter_by(name = name)
-            print('yes')
-        if sex != "":
-            query = query.filter_by(sex = sex)
-        if date_of_birth:
-            query = query.filter_by(date_of_birth = date_of_birth)
-        if phone:
-            query = query.filter_by(phone = phone)
-        if address:
-            query = query.filter_by(address = address)
+    if name:
+        builder = builder.filter_by(name=name)
+        print('yes')
+    if sex != "":
+        builder = builder.filter_by(sex=sex)
+    if date_of_birth:
+        builder = builder.filter_by(date_of_birth=date_of_birth)
+    if phone:
+        builder = builder.filter_by(phone=phone)
+    if address:
+        builder = builder.filter_by(address=address)
 
-        return render_template('blog/index.html', patients=query.all())
+    page = request.args.get('page', type=int, default=1)
 
-    return render_template('blog/search.html')
+    pagination_collection = PaginationCollection(builder, page)
+
+    return render_template('blog/search.html', patients=pagination_collection.items, pagination=pagination_collection.pagination)
 
 def get_patient(patient_id):
     patient = Patient.query.get(patient_id)
@@ -171,12 +181,12 @@ def get_diagnosis(diagnosis_id, check_author=True):
     return diagnosis
 
 
-@bp.route('/update_diagnosis/<int:diagnosis_id>', methods=('GET', 'POST'))
+@bp.route('/update_diagnosis/<int:diagnosis_id>', methods=('GET', 'PUT'))
 @login_required
 def update_diagnosis(diagnosis_id):
     diagnosis = get_diagnosis(diagnosis_id)
 
-    if request.method == 'POST':
+    if request.method == 'PUT':
         category = request.form['category']
         description = request.form['description']
         error = None
@@ -201,12 +211,14 @@ def update_diagnosis(diagnosis_id):
 @bp.route('/view/<int:patient_id>')
 @login_required
 def view_patient(patient_id):
-    diagnosis = (
+    builder = (
         Diagnosis.query.join(User)
         .filter(Diagnosis.patient_id == patient_id)
-        .order_by(Diagnosis.created.desc()).all()
+        .order_by(Diagnosis.created.desc())
     )
-    return render_template('blog/view_patient.html', patient=get_patient(patient_id), diagnosis=diagnosis)
+    page = request.args.get('page', type=int, default=1)
+    pagination_collection = PaginationCollection(builder, page)
+    return render_template('blog/view_patient.html', patient=get_patient(patient_id), diagnosis=pagination_collection.items, pagination=pagination_collection.pagination)
 
 
 @bp.route('/delete_diagnosis/<int:diagnosis_id>', methods=('POST',))

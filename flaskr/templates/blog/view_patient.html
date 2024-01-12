@@ -6,28 +6,29 @@
 {% endblock %}
 
 {% block content %}
+    <div>
+      <h1>{{ patient['name'] }}</h1>
+      <p>Sex: {{ patient['sex'] }}</p>
+      <p>DOB: {{ patient['date_of_birth'] }}</p>
+      <p>Phone: {{ patient['phone'] }}</p>
+      <p>Address: {{ patient['address'] }}</p>
+    </div>
+    <div>
+    {% for d in diagnosis %}
+    <article class="patient">
+      <header>
         <div>
-          <h1>{{ patient['name'] }}</h1>
-          <p>Sex: {{ patient['sex'] }}</p>
-          <p>DOB: {{ patient['date_of_birth'] }}</p>
-          <p>Phone: {{ patient['phone'] }}</p>
-          <p>Address: {{ patient['address'] }}</p>
+          <hr>
+          <h3>{{ d['category'] }}</h3>
+          <p>{{ d['description'] }}</p>
+          <div class="about">by {{ d['username'] }} on {{ d['created'].strftime('%Y-%m-%d') }}</div>
         </div>
-        <div>
-        {% for d in diagnosis %}
-        <article class="patient">
-          <header>
-            <div>
-              <hr>
-              <h3>{{ d['category'] }}</h3>
-              <p>{{ d['description'] }}</p>
-              <div class="about">by {{ d['username'] }} on {{ d['created'].strftime('%Y-%m-%d') }}</div>
-            </div>
-            {% if g.user['id'] == d['author_id'] %}
-              <a class="action" href="{{ url_for('blog.update_diagnosis', diagnosis_id=d['id']) }}">Edit</a>
-            {% endif %}
-          </header>
-        </article>
-        {% endfor %}
-        </div>
+        {% if g.user['id'] == d['author_id'] %}
+          <a class="action" href="{{ url_for('blog.update_diagnosis', diagnosis_id=d['id']) }}">Edit</a>
+        {% endif %}
+      </header>
+    </article>
+    {% endfor %}
+    </div>
+    {{ pagination.links }}
 {% endblock %}

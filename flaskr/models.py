@@ -30,8 +30,5 @@ class Diagnosis(db.Model):
     category = db.Column(db.String(32), nullable=False)
     description = db.Column(db.Text, nullable=False)
 
-    #author = db.relationship('User', backref='diagnoses', foreign_keys=[author_id])
-    #patient = db.relationship('Patient', backref='diagnoses', foreign_keys=[patient_id])
-
     def __repr__(self):
         return f'<Diagnosis {self.id}>'

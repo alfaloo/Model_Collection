@@ -6,6 +6,7 @@
 
 {% block content %}
   <form method="post">
+    <input type="hidden" name="_method" value="put">
     <label for="category">Category</label>
     <input name="category" id="category" value="{{ request.form['category'] or diagnosis['category'] }}" required>
     <label for="description">Description</label>

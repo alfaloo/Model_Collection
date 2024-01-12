@@ -25,31 +25,31 @@ hr {
   border-top: 1px solid lightgray;
 }
 
-nav {
+.top_nav {
   background: lightgray;
   display: flex;
   align-items: center;
   padding: 0 0.5rem;
 }
 
-nav h1 {
+.top_nav h1 {
   flex: auto;
   margin: 0;
 }
 
-nav h1 a {
+.top_nav h1 a {
   text-decoration: none;
   padding: 0.25rem 0.5rem;
 }
 
-nav ul  {
+.top_nav ul  {
   display: flex;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-nav ul li a, nav ul li span, header .action {
+.top_nav ul li a, .top_nav ul li span, header .action {
   display: block;
   padding: 0.5rem;
 }
@@ -115,7 +115,7 @@ nav ul li a, nav ul li span, header .action {
   margin-bottom: 0.5em;
 }
 
-.content input, .content textarea {
+.content input, .content select, .content textarea {
   margin-bottom: 1em;
 }
 
