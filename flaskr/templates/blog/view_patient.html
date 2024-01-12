@@ -1,15 +1,21 @@
 {% extends 'base.html' %}
 
 {% block header %}
-
-  <div class="my-3 d-grid gap-2 d-md-flex justify-content-md-end">
-    <a class="btn btn-primary" href="{{ url_for('blog.add_diagnosis', patient_id=patient.id) }}">New Diagnosis</a>
+  <div class="row">
+    <div class="col-6">
+      <h1 class="fs2-text my-3">{% block title %}{{ patient['name'] }}{% endblock %}</h1>
+    </div>
+    <div class="col-6">
+      <div class="my-3 d-grid gap-2 d-flex justify-content-end">
+        <a class="btn btn-primary" href="{{ url_for('blog.add_diagnosis', patient_id=patient.id) }}">New Diagnosis</a>
+      </div>
+    </div>
   </div>
+
 {% endblock %}
 
-{% block content %}
+  {% block content %}
     <div>
-      <h1>{{ patient['name'] }}</h1>
       <p>Sex: {{ patient['sex'] }}</p>
       <p>DOB: {{ patient['date_of_birth'] }}</p>
       <p>Phone: {{ patient['phone'] }}</p>
@@ -19,18 +25,29 @@
     {% for d in diagnosis %}
     <article class="patient">
       <header>
-        <div>
-          <hr class="border border-primary border-3 opacity-75">
-          <h3>{{ d['category'] }}</h3>
-          <p>{{ d['description'] }}</p>
-          <div class="about">by {{ d['username'] }} on {{ d['created'].strftime('%Y-%m-%d') }}</div>
+        <div class="card mb-4">
+          <div class="card-body">
+
+            <div class="row">
+              <div class="col-8">
+                  <h3 class="fs2-text">{{ d[0]['category'] }}</h3>
+              </div>
+              <div class="col-4">
+                  <div class="d-grid gap-2 d-flex justify-content-end">
+                      {% if g.user.id == d[0].author_id %}
+                        <a class="btn btn-outline-primary" href="{{ url_for('blog.update_diagnosis', diagnosis_id=d[0]['id']) }}">Edit</a>
+                      {% endif %}
+                  </div>
+              </div>
+            </div>
+
+            <h6 class="card-subtitle mb-2 text-body-secondary">{{ d[0]['description'] }}</h6>
+            <div class="about">by {{ d[1]['username'] }} on {{ d[0]['created'].strftime('%Y-%m-%d') }}</div>
+          </div>
         </div>
-        {% if g.user.id == d.author_id %}
-          <a class="action" href="{{ url_for('blog.update_diagnosis', diagnosis_id=d['id']) }}">Edit</a>
-        {% endif %}
       </header>
     </article>
     {% endfor %}
     </div>
     {{ pagination.links }}
-{% endblock %}
+  {% endblock %}

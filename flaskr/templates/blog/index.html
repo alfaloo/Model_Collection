@@ -3,7 +3,7 @@
 {% block header %}
   <div class="row">
     <div class="col-md-8">
-        <h2 class="fs2-text my-3">{% block title %}Patients{% endblock %}</h2>
+        <h1 class="fs2-text my-3">{% block title %}Patients{% endblock %}</h1>
     </div>
     <div class="col-md-4 text-md-end">
         <div class="my-3 d-grid gap-2 d-md-flex justify-content-md-end">
@@ -11,7 +11,7 @@
             <a class="btn btn-primary" href="{{ url_for('blog.add_patient') }}">Create</a>
         </div>
     </div>
-</div>
+  </div>
 {% endblock %}
 
 {% block content %}
@@ -20,12 +20,12 @@
   <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
     <div class="card mb-4">
       <a class="card-body text-decoration-none" href="{{ url_for('blog.view_patient', patient_id=patient.id) }}">
-        <h5 class="card-title">{{ patient.name }}</h5>
+        <h3 class="card-title">{{ patient.name }}</h3>
         <h6 class="card-subtitle mb-2 text-body-secondary">Sex: {{ patient.sex }}</h6>
         <h6 class="card-subtitle mb-2 text-body-secondary">Date of Birth: {{ patient.sex }}</h6>
         <h6 class="card-subtitle mb-2 text-body-secondary">Phone: {{ patient.phone }}</h6>
         {% if g.user.is_admin %}
-        <a href="{{ url_for('blog.update_patient', patient_id=patient.id) }}" class="btn btn-outline-primary m-3">Edit</span></a>
+          <a class="btn btn-outline-primary m-3" href="{{ url_for('blog.update_patient', patient_id=patient.id) }}">Edit</span></a>
         {% endif %}
       </a>
     </div>

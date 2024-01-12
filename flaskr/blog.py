@@ -212,8 +212,9 @@ def update_diagnosis(diagnosis_id):
 @login_required
 def view_patient(patient_id):
     builder = (
-        Diagnosis.query.join(User)
+        db.session.query(Diagnosis, User)
         .filter(Diagnosis.patient_id == patient_id)
+        .join(User, Diagnosis.author_id == User.id)
         .order_by(Diagnosis.created.desc())
     )
     page = request.args.get('page', type=int, default=1)
