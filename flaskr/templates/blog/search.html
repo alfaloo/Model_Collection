@@ -5,44 +5,99 @@
 {% endblock %}
 
 {% block content %}
-  <form method="get">
-    <label for="name">Name</label>
-    <input name="name" id="name" value="{{ request.form['name'] }}">
-    <label for="sex">Sex</label>
-    <select id="sex" name="sex">
-        <option value=""></option>
-        <option value="male">male</option>
-        <option value="female">female</option>
-    </select>
-    <label for="date_of_birth">Date of Birth</label>
-    <input type="date" name="date_of_birth" id="date_of_birth" value="{{ request.form['date_of_birth'] }}">
-    <label for="phone">Phone</label>
-    <input name="phone" id="phone" value="{{ request.form['phone'] }}">
-    <label for="address">Address</label>
-    <input name="address" id="address" value="{{ request.form['address'] }}">
+<!--  <form method="get">-->
+<!--    <label for="name">Name</label>-->
+<!--    <input name="name" id="name" value="{{ request.form['name'] }}">-->
+<!--    <label for="sex">Sex</label>-->
+<!--    <select id="sex" name="sex">-->
+<!--        <option value=""></option>-->
+<!--        <option value="male">male</option>-->
+<!--        <option value="female">female</option>-->
+<!--    </select>-->
+<!--    <label for="date_of_birth">Date of Birth</label>-->
+<!--    <input type="date" name="date_of_birth" id="date_of_birth" value="{{ request.form['date_of_birth'] }}">-->
+<!--    <label for="phone">Phone</label>-->
+<!--    <input name="phone" id="phone" value="{{ request.form['phone'] }}">-->
+<!--    <label for="address">Address</label>-->
+<!--    <input name="address" id="address" value="{{ request.form['address'] }}">-->
 
-    <input type="submit" value="Search">
-  </form>
-  <a href="{{ url_for('blog.index') }}">Back</a>
+<!--    <input type="submit" value="Search">-->
+<!--  </form>-->
 
+<!--  <a href="{{ url_for('blog.index') }}">Back</a>-->
+
+<form method="get" class="">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input type="text" name="name" class="form-control" id="name" value="{{ request.args.get('name', default='') }}">
+    </div>
+    <div class="mb-3">
+      <label for="sex" class="form-label">Sex</label>
+      <select id="sex" name="sex" class="form-select" >
+        <option value="male" {% if request.args.get('sex', default='') == 'male' %} selected {% endif %}>Male</option>
+        <option value="female" {% if request.args.get('sex', default='') == 'female' %} selected {% endif %}>Female</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="date_of_birth" class="form-label">Date of Birth</label>
+      <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="{{ request.args.get('date_of_birth') }}">
+    </div>
+
+    <div class="mb-3">
+      <label for="phone" class="form-label">Phone</label>
+      <input type="text" name="phone" class="form-control" id="phone" value="{{ request.args.get('phone', default='') }}">
+    </div>
+
+    <div class="mb-3">
+      <label for="address" class="form-label">Address</label>
+      <textarea class="form-control" id="address" name="address" rows="3">{{ request.args.get('address', default='') }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+    <a class="btn btn-warning" href="{{ url_for('blog.index') }}">Back</a>
+</form>
+
+<!--  {% for patient in patients %}-->
+<!--    <article class="patient">-->
+<!--      <header>-->
+<!--        <div>-->
+<!--          <h1>{{ patient['name'] }}</h1>-->
+<!--          <p>Sex: {{ patient['sex'] }}, DOB: {{ patient['date_of_birth'] }}</p>-->
+<!--        </div>-->
+<!--        {% if g.user['is_admin'] == 1 %}-->
+<!--          <a class="action" href="{{ url_for('blog.update_patient', patient_id=patient['id']) }}">Edit</a>-->
+<!--        {% endif %}-->
+<!--        <a class="action" href="{{ url_for('blog.view_patient', patient_id=patient['id']) }}">View</a>-->
+<!--      </header>-->
+<!--      <p class="body">{{ patient['body'] }}</p>-->
+<!--    </article>-->
+<!--    {% if not loop.last %}-->
+<!--      <hr>-->
+<!--    {% endif %}-->
+<!--  {% endfor %}-->
+
+{% if request.args %}
+<hr class="border border-primary border-3 opacity-75">
+{% if not patients|length %}
+<div class="alert alert-warning">No patient is found, please try again</div>
+{% endif %}
+{% endif %}
+<div class="row">
   {% for patient in patients %}
-    <article class="patient">
-      <header>
-        <div>
-          <h1>{{ patient['name'] }}</h1>
-          <p>Sex: {{ patient['sex'] }}, DOB: {{ patient['date_of_birth'] }}</p>
-        </div>
-        {% if g.user['is_admin'] == 1 %}
-          <a class="action" href="{{ url_for('blog.update_patient', patient_id=patient['id']) }}">Edit</a>
+  <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+    <div class="card mb-4">
+      <a class="card-body" href="{{ url_for('blog.view_patient', patient_id=patient.id) }}">
+        <h5 class="card-title">{{ patient.name }}</h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary">{{ patient.sex }}</h6>
+        <h6 class="card-subtitle mb-2 text-body-secondary">{{ patient.phone }}</h6>
+        <p class="card-text">{{ patient.address }}</p>
+        {% if g.user.is_admin %}
+        <a href="{{ url_for('blog.update_patient', patient_id=patient.id) }}" class="btn btn-info m-2"><span class="text-white">Edit</span></a>
         {% endif %}
-        <a class="action" href="{{ url_for('blog.view_patient', patient_id=patient['id']) }}">View</a>
-      </header>
-      <p class="body">{{ patient['body'] }}</p>
-    </article>
-    {% if not loop.last %}
-      <hr>
-    {% endif %}
+      </a>
+    </div>
+  </div>
   {% endfor %}
+</div>
 
   {{ pagination.links }}
 

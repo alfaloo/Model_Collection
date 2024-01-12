@@ -54,6 +54,8 @@ def add_patient():
 @bp.route('/search', methods=('GET', 'POST'))
 @login_required
 def search():
+    if not request.args:
+        return render_template('blog/search.html', patients={}, pagination=None)
     name = request.args.get('name', type=str, default=None)
     sex = request.args.get('sex', type=str, default=None)
     date_of_birth = request.args.get('date_of_birth', type=str, default=None)
@@ -65,7 +67,7 @@ def search():
     if name:
         builder = builder.filter_by(name=name)
         print('yes')
-    if sex != "":
+    if sex:
         builder = builder.filter_by(sex=sex)
     if date_of_birth:
         builder = builder.filter_by(date_of_birth=date_of_birth)
@@ -102,7 +104,6 @@ def update_patient(patient_id):
         date_of_birth = request.form['date_of_birth']
         phone = request.form['phone']
         address = request.form['address']
-        error = None
 
         if not name:
             error = 'Name is required.'
@@ -113,13 +114,14 @@ def update_patient(patient_id):
         elif not address:
             error = 'Address is required.'
 
-        if error is not None:
+        if 'error' in locals():
             flash(error)
         else:
             Patient.query.filter_by(id=patient_id).update(
                 {"name": name, "sex": sex, "date_of_birth": date_of_birth, "phone": phone, "address": address}
             )
             db.session.commit()
+            flash('Patient is updated', 'success')
             return redirect(url_for('blog.index'))
 
     return render_template('blog/update_patient.html', patient=patient)

@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}View "{{ patient['name'] }}"{% endblock %}</h1>
-  <a class="action" href="{{ url_for('blog.add_diagnosis', patient_id=patient['id']) }}">New Diagnosis</a>
+
+  <div class="my-3 d-grid gap-2 d-md-flex justify-content-md-end">
+    <a class="btn btn-primary" href="{{ url_for('blog.add_diagnosis', patient_id=patient.id) }}">New Diagnosis</a>
+  </div>
 {% endblock %}
 
 {% block content %}
     <div>
-      <h1>{{ patient['name'] }}</h1>
       <p>Sex: {{ patient['sex'] }}</p>
       <p>DOB: {{ patient['date_of_birth'] }}</p>
       <p>Phone: {{ patient['phone'] }}</p>
@@ -18,12 +19,12 @@
     <article class="patient">
       <header>
         <div>
-          <hr>
+          <hr class="border border-primary border-3 opacity-75">
           <h3>{{ d['category'] }}</h3>
           <p>{{ d['description'] }}</p>
           <div class="about">by {{ d['username'] }} on {{ d['created'].strftime('%Y-%m-%d') }}</div>
         </div>
-        {% if g.user['id'] == d['author_id'] %}
+        {% if g.user.id == d.author_id %}
           <a class="action" href="{{ url_for('blog.update_diagnosis', diagnosis_id=d['id']) }}">Edit</a>
         {% endif %}
       </header>
