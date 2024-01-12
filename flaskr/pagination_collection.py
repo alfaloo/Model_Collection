@@ -1,5 +1,5 @@
 import os
-from flask_paginate import Pagination, get_page_parameter
+from flask_paginate import Pagination
 
 
 class PaginationCollection:

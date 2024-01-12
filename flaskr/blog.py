@@ -1,10 +1,8 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
-from flask_paginate import Pagination, get_page_parameter
 from werkzeug.exceptions import abort
 from dotenv import load_dotenv
-import os
 
 from flaskr.auth import login_required
 from .models import User, Patient, Diagnosis, db
