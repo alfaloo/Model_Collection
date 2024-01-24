@@ -8,7 +8,9 @@ from dotenv import load_dotenv
 migrate = Migrate()
 load_dotenv()
 
+# brew services start mysql
 # flask --app flaskr run --debug
+
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)

@@ -34,6 +34,7 @@
     <div class="mb-3">
       <label for="sex" class="form-label">Sex</label>
       <select id="sex" name="sex" class="form-select" >
+        <option value=""></option>
         <option value="male" {% if request.args.get('sex', default='') == 'male' %} selected {% endif %}>Male</option>
         <option value="female" {% if request.args.get('sex', default='') == 'female' %} selected {% endif %}>Female</option>
       </select>
@@ -56,25 +57,6 @@
     <a class="btn btn-secondary" href="{{ url_for('blog.index') }}">Back</a>
 </form>
 
-<!--  {% for patient in patients %}-->
-<!--    <article class="patient">-->
-<!--      <header>-->
-<!--        <div>-->
-<!--          <h1>{{ patient['name'] }}</h1>-->
-<!--          <p>Sex: {{ patient['sex'] }}, DOB: {{ patient['date_of_birth'] }}</p>-->
-<!--        </div>-->
-<!--        {% if g.user['is_admin'] == 1 %}-->
-<!--          <a class="action" href="{{ url_for('blog.update_patient', patient_id=patient['id']) }}">Edit</a>-->
-<!--        {% endif %}-->
-<!--        <a class="action" href="{{ url_for('blog.view_patient', patient_id=patient['id']) }}">View</a>-->
-<!--      </header>-->
-<!--      <p class="body">{{ patient['body'] }}</p>-->
-<!--    </article>-->
-<!--    {% if not loop.last %}-->
-<!--      <hr>-->
-<!--    {% endif %}-->
-<!--  {% endfor %}-->
-
 {% if request.args %}
 <hr class="border border-primary border-3 opacity-75">
 {% if not patients|length %}
@@ -91,7 +73,7 @@
         <h6 class="card-subtitle mb-2 text-body-secondary">{{ patient.phone }}</h6>
         <p class="card-text">{{ patient.address }}</p>
         {% if g.user.is_admin %}
-        <a href="{{ url_for('blog.update_patient', patient_id=patient.id) }}" class="btn btn-info m-2"><span class="text-white">Edit</span></a>
+        <a href="{{ url_for('blog.update_patient', patient_id=patient.id) }}" class="btn btn-outline-primary m-2">Edit</a>
         {% endif %}
       </a>
     </div>

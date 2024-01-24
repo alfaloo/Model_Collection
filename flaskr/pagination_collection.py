@@ -1,9 +1,8 @@
 import os
 from flask_paginate import Pagination
 
-
 class PaginationCollection:
-    def __init__(self, builder, page, search=None):
+    def __init__(self, builder, page):
         per_page = int(os.getenv("PER_PAGE"))
         offset = (page - 1) * per_page
         total = builder.count()
