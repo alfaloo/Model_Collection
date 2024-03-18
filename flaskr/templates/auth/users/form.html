@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1 class="my-3">{% block title %}{% if user.id %} Edit User {% else %} Create User {% endif %} {% endblock %}</h1>
+  <h1 class="my-3">{% block title %}{% if user.id %} Edit User {% else %} Create User {% endif %}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -25,5 +25,23 @@
     </div>
     <button type="submit" class="btn btn-primary">{% if user.id %} Update {% else %} Create {% endif %}</button>
     <a  class="btn btn-secondary" href="{{ url_for('auth.users') }}">Back</a>
+    {% if user.id %}
+      <button id="delete_trigger" class="btn btn-danger float-end" type="submit" onclick="return deleteUser()">Delete</button>
+    {% endif %}
   </form>
+  {% if user.id %}
+    <hr>
+      <form id="delete_form" action="{{ url_for('auth.delete_user', user_id=user.id) }}" method="post">
+    </form>
+  {% endif %}
+
+<script>
+  deleteUser = () => {
+    if (confirm('Confirm to delete this User?')) {
+      document.getElementById('delete_form').submit();
+    }
+
+    return false;
+  }
+</script>
 {% endblock %}

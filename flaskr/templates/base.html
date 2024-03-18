@@ -37,6 +37,7 @@
               {% if g.user.is_admin %}
               <li><a class="dropdown-item" href="{{ url_for('auth.users') }}">Users</a></li>
               {% endif %}
+              <li><a class="dropdown-item" href="{{ url_for('auth.profile') }}">Profile</a></li>
               <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Log Out</a></li>
             </ul>
           </li>

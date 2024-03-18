@@ -25,6 +25,22 @@ def users():
 
     return render_template('auth/users/index.html', pagination_collection=pagination_collection)
 
+@bp.route('/profile', methods=('GET', 'POST'))
+def profile():
+    builder = (
+        db.session.query(Diagnosis, Patient)
+        .filter(Diagnosis.author_id == g.user.id)
+        .join(Patient, Diagnosis.patient_id == Patient.id)
+        .order_by(Diagnosis.created.desc())
+    )
+    # builder = Diagnosis.query.order_by(Diagnosis.created).filter_by(author_id=g.user.id)
+
+    page = request.args.get('page', type=int, default=1)
+
+    pagination_collection = PaginationCollection(builder, page)
+
+    return render_template('auth/users/profile.html', user=g.user, diagnosis=pagination_collection.items, pagination=pagination_collection.pagination)
+
 @bp.route('/users/<int:id>', methods=('GET', 'POST'))
 def user_edit(id):
 
@@ -62,7 +78,7 @@ def user_create():
         username = request.form.get('username')
         password = request.form.get('password')
         confirmation = request.form.get('confirmation')
-        is_admin = request.form.get('is_admin')
+        is_admin = True if request.form.get('is_admin') == 1 else False
 
         if not username:
             error = 'Username is required.'
@@ -82,6 +98,19 @@ def user_create():
             return redirect(url_for("auth.users"))
 
     return render_template('auth/users/form.html', user=User())
+
+@bp.route('/delete_user/<int:user_id>', methods=['POST'])
+def delete_user(user_id):
+    user_to_delete = User.query.get(user_id)
+
+    if user_to_delete:
+        db.session.delete(user_to_delete)
+        db.session.commit()
+        flash(f"User deleted successfully", 'success')
+    else:
+        flash(f"User not found", 'danger')
+
+    return redirect(url_for('auth.users'))
 
 
 @bp.route('/login', methods=('GET', 'POST'))
