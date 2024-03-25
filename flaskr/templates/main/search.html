@@ -33,7 +33,7 @@
       <textarea class="form-control" id="address" name="address" rows="3">{{ request.args.get('address', default='') }}</textarea>
     </div>
     <button type="submit" class="btn btn-primary">Search</button>
-    <a class="btn btn-secondary" href="{{ url_for('blog.index') }}">Back</a>
+    <a class="btn btn-secondary" href="{{ url_for('main.index') }}">Back</a>
 </form>
 
 {% if request.args %}
@@ -46,13 +46,13 @@
   {% for patient in patients %}
   <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
     <div class="card mb-4">
-      <a class="card-body" href="{{ url_for('blog.view_patient', patient_id=patient.id) }}">
+      <a class="card-body" href="{{ url_for('patient.view_patient', patient_id=patient.id) }}">
         <h5 class="card-title">{{ patient.name }}</h5>
         <h6 class="card-subtitle mb-2 text-body-secondary">{{ patient.sex }}</h6>
         <h6 class="card-subtitle mb-2 text-body-secondary">{{ patient.phone }}</h6>
         <p class="card-text">{{ patient.address }}</p>
         {% if g.user.is_admin %}
-        <a href="{{ url_for('blog.update_patient', patient_id=patient.id) }}" class="btn btn-outline-primary m-2">Edit</a>
+        <a href="{{ url_for('patient.update_patient', patient_id=patient.id) }}" class="btn btn-outline-primary m-2">Edit</a>
         {% endif %}
       </a>
     </div>

@@ -7,9 +7,9 @@ from .pagination_collection import PaginationCollection
 
 from .models import User, Patient, Diagnosis, db
 
-bp = Blueprint('users', __name__, url_prefix='/users')
+bp = Blueprint('user', __name__, url_prefix='/user')
 
-@bp.route('/users', methods=('GET', 'POST'))
+@bp.route('/user', methods=('GET', 'POST'))
 def index():
     if not g.user.is_admin:
         abort(403)
@@ -20,7 +20,7 @@ def index():
 
     pagination_collection = PaginationCollection(builder, page)
 
-    return render_template('users/index.html', pagination_collection=pagination_collection)
+    return render_template('user/index.html', pagination_collection=pagination_collection)
 
 @bp.route('/profile', methods=('GET', 'POST'))
 def profile():
@@ -35,7 +35,7 @@ def profile():
 
     pagination_collection = PaginationCollection(builder, page)
 
-    return render_template('users/profile.html', user=g.user, diagnosis=pagination_collection.items, pagination=pagination_collection.pagination)
+    return render_template('user/profile.html', user=g.user, diagnosis=pagination_collection.items, pagination=pagination_collection.pagination)
 
 @bp.route('/<int:id>', methods=('GET', 'POST'))
 def user_edit(id):
@@ -63,9 +63,9 @@ def user_edit(id):
             flash(error)
         else:
             flash('User is updated', 'success')
-            return redirect(url_for('users.index'))
+            return redirect(url_for('user.index'))
 
-    return render_template('users/form.html', user=user)
+    return render_template('user/form.html', user=user)
 
 @bp.route('/create', methods=('GET', 'POST'))
 def user_create():
@@ -92,9 +92,9 @@ def user_create():
             new_user = User(username=username, password=generate_password_hash(password), is_admin=is_admin)
             db.session.add(new_user)
             db.session.commit()
-            return redirect(url_for("users.index"))
+            return redirect(url_for("user.index"))
 
-    return render_template('users/form.html', user=User())
+    return render_template('user/form.html', user=User())
 
 @bp.route('/delete/<int:user_id>', methods=['POST'])
 def user_delete(user_id):
@@ -107,4 +107,4 @@ def user_delete(user_id):
     else:
         flash(f"User not found", 'danger')
 
-    return redirect(url_for('users.index'))
+    return redirect(url_for('user.index'))
