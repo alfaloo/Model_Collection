@@ -24,14 +24,14 @@
       <label class="form-check-label" for="is_admin">Is admin account</label>
     </div>
     <button type="submit" class="btn btn-primary">{% if user.id %} Update {% else %} Create {% endif %}</button>
-    <a  class="btn btn-secondary" href="{{ url_for('auth.users') }}">Back</a>
+    <a  class="btn btn-secondary" href="{{ url_for('users.index') }}">Back</a>
     {% if user.id %}
       <button id="delete_trigger" class="btn btn-danger float-end" type="submit" onclick="return deleteUser()">Delete</button>
     {% endif %}
   </form>
   {% if user.id %}
     <hr>
-      <form id="delete_form" action="{{ url_for('auth.delete_user', user_id=user.id) }}" method="post">
+      <form id="delete_form" action="{{ url_for('users.user_delete', user_id=user.id) }}" method="post">
     </form>
   {% endif %}
 
