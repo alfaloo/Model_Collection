@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 from flask_migrate import Migrate
-from flaskr import auth, blog
+from flaskr import auth, user, patient, diagnosis, main
 from .models import db
 from dotenv import load_dotenv
 
@@ -34,8 +34,10 @@ def create_app(test_config=None):
         pass
 
     app.register_blueprint(auth.bp)
-
-    app.register_blueprint(blog.bp)
+    app.register_blueprint(user.bp)
+    app.register_blueprint(patient.bp)
+    app.register_blueprint(diagnosis.bp)
+    app.register_blueprint(main.bp)
     app.add_url_rule('/', endpoint='index')
 
     return app

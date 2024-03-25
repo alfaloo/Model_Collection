@@ -7,7 +7,7 @@
     </div>
     <div class="col-6">
       <div class="my-3 d-grid gap-2 d-flex justify-content-end">
-        <a class="btn btn-primary" href="{{ url_for('blog.add_diagnosis', patient_id=patient.id) }}">New Diagnosis</a>
+        <a class="btn btn-primary" href="{{ url_for('diagnosis.add_diagnosis', patient_id=patient.id) }}">New Diagnosis</a>
       </div>
     </div>
   </div>
@@ -34,7 +34,7 @@
               <div class="col-4">
                   <div class="d-grid gap-2 d-flex justify-content-end">
                       {% if g.user.id == d[0].author_id %}
-                        <a class="btn btn-outline-primary" href="{{ url_for('blog.update_diagnosis', diagnosis_id=d[0]['id']) }}">Edit</a>
+                        <a class="btn btn-outline-primary" href="{{ url_for('diagnosis.update_diagnosis', diagnosis_id=d[0]['id']) }}">Edit</a>
                       {% endif %}
                   </div>
               </div>

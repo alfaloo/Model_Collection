@@ -32,6 +32,6 @@
       <textarea class="form-control" id="address" name="address" rows="3">{{ request.form.get('address', default='') }}</textarea>
     </div>
     <button type="submit" class="btn btn-primary">Create</button>
-    <a class="btn btn-secondary" href="{{ url_for('blog.index') }}">Back</a>
+    <a class="btn btn-secondary" href="{{ url_for('main.index') }}">Back</a>
 </form>
 {% endblock %}
