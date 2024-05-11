@@ -1,5 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 
+# flask db migrate -m "Description of the changes"
+# flask db upgrade
+
 db = SQLAlchemy()
 
 class User(db.Model):

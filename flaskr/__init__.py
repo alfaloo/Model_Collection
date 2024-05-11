@@ -16,6 +16,7 @@ def create_app(test_config=None):
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("SQLALCHEMY_DATABASE_URI")
     app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -29,7 +30,7 @@ def create_app(test_config=None):
 
     # ensure the instance folder exists
     try:
-        os.makedirs(app.instance_path)
+        os.makedirs(app.instance_path, exist_ok=True)
     except OSError:
         pass
 
@@ -38,6 +39,7 @@ def create_app(test_config=None):
     app.register_blueprint(patient.bp)
     app.register_blueprint(diagnosis.bp)
     app.register_blueprint(main.bp)
+
     app.add_url_rule('/', endpoint='index')
 
     return app
