@@ -1,65 +1,65 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1 class="my-3">{% block title %}Search{% endblock %}</h1>
+  <h1 class="my-3">{% block title %}Edit item {% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-<form method="get" class="">
+<form method="post">
     <!-- Brand -->
     <div class="mb-3">
       <label for="brand" class="form-label">Brand</label>
       <input type="text" name="brand" class="form-control" id="brand"
-            value="{{ request.args.get('brand', default='') }}">
+            value="{{ request.form.get('brand', default=item.brand) }}">
     </div>
 
     <!-- Make -->
     <div class="mb-3">
       <label for="make" class="form-label">Make</label>
       <input type="text" name="make" class="form-control" id="make"
-            value="{{ request.args.get('make', default='') }}">
+            value="{{ request.form.get('make', default=item.make) }}">
     </div>
 
     <!-- Model -->
     <div class="mb-3">
       <label for="model" class="form-label">Model</label>
       <input type="text" name="model" class="form-control" id="model"
-            value="{{ request.args.get('model', default='') }}">
+            value="{{ request.form.get('model', default=item.model) }}">
     </div>
 
     <!-- Variant -->
     <div class="mb-3">
       <label for="variant" class="form-label">Variant</label>
       <input type="text" name="variant" class="form-control" id="variant"
-            value="{{ request.args.get('variant', default='') }}">
+            value="{{ request.form.get('variant', default=item.variant) }}">
     </div>
 
     <!-- Serial Number -->
     <div class="mb-3">
       <label for="serial_number" class="form-label">Serial Number</label>
       <input type="number" name="serial_number" class="form-control" id="serial_number"
-            value="{{ request.args.get('serial_number', default='') }}">
+            value="{{ request.form.get('serial_number', default=item.serial_number) }}">
     </div>
 
     <!-- Production Count -->
     <div class="mb-3">
       <label for="production_count" class="form-label">Production Count</label>
       <input type="number" name="production_count" class="form-control" id="production_count"
-            value="{{ request.args.get('production_count', default='') }}">
+            value="{{ request.form.get('production_count', default=item.production_count) }}">
     </div>
 
     <!-- Purchase Price -->
     <div class="mb-3">
       <label for="purchase_price" class="form-label">Purchase Price</label>
       <input type="number" name="purchase_price" class="form-control" id="purchase_price"
-            value="{{ request.args.get('purchase_price', default='') }}">
+            value="{{ request.form.get('purchase_price', default=item.purchase_price) }}">
     </div>
 
     <!-- Purchase Platform -->
     <div class="mb-3">
       <label for="purchase_platform" class="form-label">Purchase Platform</label>
       <input type="text" name="purchase_platform" class="form-control" id="purchase_platform"
-            value="{{ request.args.get('purchase_platform', default='') }}">
+            value="{{ request.form.get('purchase_platform', default=item.purchase_platform) }}">
     </div>
 
     <!-- Purchase Year -->
@@ -68,7 +68,8 @@
       <select name="purchase_year" class="form-select" id="purchase_year">
         <option value="">-- Select Year --</option>
         {% for year in range(2000, current_year) %}
-          <option value="{{ year }}" {% if request.args.get('purchase_year', default='')|int == year %}selected{% endif %}>
+          <option value="{{ year }}"
+            {% if request.form.get('purchase_year', default=item.purchase_year)|int == year %}selected{% endif %}>
             {{ year }}
           </option>
         {% endfor %}
@@ -81,7 +82,8 @@
       <select name="purchase_month" class="form-select" id="purchase_month">
         <option value="">-- Select Month --</option>
         {% for month in range(1, 13) %}
-          <option value="{{ month }}" {% if request.args.get('purchase_month', default='')|int == month %}selected{% endif %}>
+          <option value="{{ month }}"
+            {% if request.form.get('purchase_month', default=item.purchase_month)|int == month %}selected{% endif %}>
             {{ month }}
           </option>
         {% endfor %}
@@ -89,27 +91,24 @@
     </div>
 
     <!-- Is Sold -->
-    <div class="mb-3">
-      <label for="is_sold" class="form-label">Is Sold</label>
-      <select name="is_sold" class="form-select" id="is_sold">
-        <option value="">-- Select Status --</option>
-        <option value="True" {% if request.args.get('is_sold', default='') == 'True' %}selected{% endif %}>Yes</option>
-        <option value="False" {% if request.args.get('is_sold', default='') == 'False' %}selected{% endif %}>No</option>
-      </select>
+    <div class="mb-3 form-check">
+      <input type="checkbox" class="form-check-input" id="is_sold" name="is_sold" value="1"
+            {% if request.form.get('is_sold', default=item.is_sold) %}checked{% endif %}>
+      <label class="form-check-label" for="is_sold">Is Sold</label>
     </div>
 
     <!-- Sold Price -->
     <div class="mb-3">
       <label for="sold_price" class="form-label">Sold Price</label>
       <input type="number" name="sold_price" class="form-control" id="sold_price"
-            value="{{ request.args.get('sold_price', default='') }}">
+            value="{{ request.form.get('sold_price', default=item.sold_price) }}">
     </div>
 
     <!-- Sold Platform -->
     <div class="mb-3">
       <label for="sold_platform" class="form-label">Sold Platform</label>
       <input type="text" name="sold_platform" class="form-control" id="sold_platform"
-            value="{{ request.args.get('sold_platform', default='') }}">
+            value="{{ request.form.get('sold_platform', default=item.sold_platform) }}">
     </div>
 
     <!-- Sold Year -->
@@ -118,7 +117,8 @@
       <select name="sold_year" class="form-select" id="sold_year">
         <option value="">-- Select Year --</option>
         {% for year in range(2000, current_year) %}
-          <option value="{{ year }}" {% if request.args.get('sold_year', default='')|int == year %}selected{% endif %}>
+          <option value="{{ year }}"
+            {% if request.form.get('sold_year', default=item.sold_year)|int == year %}selected{% endif %}>
             {{ year }}
           </option>
         {% endfor %}
@@ -131,41 +131,31 @@
       <select name="sold_month" class="form-select" id="sold_month">
         <option value="">-- Select Month --</option>
         {% for month in range(1, 13) %}
-          <option value="{{ month }}" {% if request.args.get('sold_month', default='')|int == month %}selected{% endif %}>
+          <option value="{{ month }}"
+            {% if request.form.get('sold_month', default=item.sold_month)|int == month %}selected{% endif %}>
             {{ month }}
           </option>
         {% endfor %}
       </select>
     </div>
 
-    <button type="submit" class="btn btn-primary">Search</button>
+    <button type="submit" class="btn btn-primary">Update</button>
     <a class="btn btn-secondary" href="{{ url_for('main.index') }}">Back</a>
+    <button id="delete_trigger" class="btn btn-danger float-end" type="submit" onclick="return deleteitem()">Delete</button>
 </form>
 
-{% if request.args %}
-<hr class="border border-primary border-3 opacity-75">
-{% if not items|length %}
-<div class="alert alert-warning">No item is found, please try again</div>
-{% endif %}
-{% endif %}
-<div class="row">
-  {% for item in items %}
-  <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-    <div class="card mb-4">
-      <a class="card-body" href="{{ url_for('item.view_item', item_id=item.id) }}">
-        <h3 class="card-title">{{ item.brand }} {{ item.model }}</h3>
-        <h6 class="card-subtitle mb-2 text-body-secondary">Variant: {{ item.variant }}</h6>
-        <h6 class="card-subtitle mb-2 text-body-secondary">Price: {{ item.purchase_price }}</h6>
-        <h6 class="card-subtitle mb-2 text-body-secondary">Date: {{ item.purchase_year }} {{ item.purchase_month }}</h6>
-        {% if g.user.is_admin %}
-        <a href="{{ url_for('item.update_item', item_id=item.id) }}" class="btn btn-outline-primary m-2">Edit</a>
-        {% endif %}
-      </a>
-    </div>
-  </div>
-  {% endfor %}
-</div>
+<form id="delete_form" action="{{ url_for('item.delete_item', item_id=item['id']) }}" method="post">
 
-  {{ pagination.links }}
+</form>
+
+<script>
+  deleteitem = () => {
+    if (confirm('Confirm to delete this item?')) {
+      document.getElementById('delete_form').submit();
+    }
+
+    return false;
+  }
+</script>
 
 {% endblock %}

@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash
 from werkzeug.exceptions import abort
 from .pagination_collection import PaginationCollection
 
-from .models import User, Patient, Diagnosis, db
+from .models import User, Item, Comment, db
 
 bp = Blueprint('user', __name__, url_prefix='/user')
 
@@ -25,17 +25,17 @@ def index():
 @bp.route('/profile', methods=('GET', 'POST'))
 def profile():
     builder = (
-        db.session.query(Diagnosis, Patient)
-        .filter(Diagnosis.author_id == g.user.id)
-        .join(Patient, Diagnosis.patient_id == Patient.id)
-        .order_by(Diagnosis.created.desc())
+        db.session.query(Comment, Item)
+        .filter(Comment.author_id == g.user.id)
+        .join(Item, Comment.item_id == Item.id)
+        .order_by(Comment.created.desc())
     )
 
     page = request.args.get('page', type=int, default=1)
 
     pagination_collection = PaginationCollection(builder, page)
 
-    return render_template('user/profile.html', user=g.user, diagnosis=pagination_collection.items, pagination=pagination_collection.pagination)
+    return render_template('user/profile.html', user=g.user, comment=pagination_collection.items, pagination=pagination_collection.pagination)
 
 @bp.route('/<int:id>', methods=('GET', 'POST'))
 def user_edit(id):

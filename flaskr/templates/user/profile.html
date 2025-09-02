@@ -16,9 +16,9 @@
 
   {% block content %}
     <div>
-    <h1 class="my-3">Diagnosis History</h1>
-    {% for d in diagnosis %}
-    <article class="patient">
+    <h1 class="my-3">comment History</h1>
+    {% for d in comment %}
+    <article class="item">
       <header>
         <div class="card mb-4">
           <div class="card-body">
@@ -29,7 +29,7 @@
               <div class="col-4">
                   <div class="d-grid gap-2 d-flex justify-content-end">
                       {% if g.user.id == d[0]['author_id'] %}
-                        <a class="btn btn-outline-primary" href="{{ url_for('diagnosis.update_diagnosis', diagnosis_id=d[0]['id']) }}">Edit</a>
+                        <a class="btn btn-outline-primary" href="{{ url_for('comment.update_comment', comment_id=d[0]['id']) }}">Edit</a>
                       {% endif %}
                   </div>
               </div>

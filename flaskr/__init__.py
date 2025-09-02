@@ -1,9 +1,10 @@
 import os
 from flask import Flask
 from flask_migrate import Migrate
-from flaskr import auth, user, patient, diagnosis, main
-from .models import db
+from flaskr import auth, user, item, comment, main
+from .models import db, User
 from dotenv import load_dotenv
+from werkzeug.security import generate_password_hash
 
 migrate = Migrate()
 load_dotenv()
@@ -36,10 +37,23 @@ def create_app(test_config=None):
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(user.bp)
-    app.register_blueprint(patient.bp)
-    app.register_blueprint(diagnosis.bp)
+    app.register_blueprint(item.bp)
+    app.register_blueprint(comment.bp)
     app.register_blueprint(main.bp)
 
     app.add_url_rule('/', endpoint='index')
+
+    # Create default admin user if it doesn't exist
+    with app.app_context():
+        db.create_all()  # ensures tables exist
+
+        if not User.query.filter_by(username="admin").first():
+            admin_user = User(
+                username="admin",
+                password=generate_password_hash("password"),
+                is_admin=True
+            )
+            db.session.add(admin_user)
+            db.session.commit()
 
     return app

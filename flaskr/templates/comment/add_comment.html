@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1 class="my-3">{% block title %}Add Diagnosis{% endblock %}</h1>
+  <h1 class="my-3">{% block title %}Add comment{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -15,6 +15,6 @@
       <textarea name="description" class="form-control" id="description" rows="3">{{ request.form.get('description', default='') }}</textarea>
     </div>
     <button type="submit" class="btn btn-primary">Create</button>
-    <a class="btn btn-secondary" href="{{ url_for('patient.view_patient', patient_id=patient_id) }}">Back</a>
+    <a class="btn btn-secondary" href="{{ url_for('item.view_item', item_id=item_id) }}">Back</a>
 </form>
 {% endblock %}

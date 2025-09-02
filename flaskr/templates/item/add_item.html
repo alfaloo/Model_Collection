@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1 class="my-3">{% block title %}Add Item{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    <!-- Brand -->
+    <div class="mb-3">
+      <label for="brand" class="form-label">Brand</label>
+      <input type="text" name="brand" class="form-control" id="brand" value="{{ request.form.get('brand', '') }}">
+    </div>
+
+    <!-- Make -->
+    <div class="mb-3">
+      <label for="make" class="form-label">Make</label>
+      <input type="text" name="make" class="form-control" id="make" value="{{ request.form.get('make', '') }}">
+    </div>
+
+    <!-- Model -->
+    <div class="mb-3">
+      <label for="model" class="form-label">Model</label>
+      <input type="text" name="model" class="form-control" id="model" value="{{ request.form.get('model', '') }}">
+    </div>
+
+    <!-- Variant -->
+    <div class="mb-3">
+      <label for="variant" class="form-label">Variant</label>
+      <input type="text" name="variant" class="form-control" id="variant" value="{{ request.form.get('variant', '') }}">
+    </div>
+
+    <!-- Serial Number -->
+    <div class="mb-3">
+      <label for="serial_number" class="form-label">Serial Number</label>
+      <input type="number" name="serial_number" class="form-control" id="serial_number" value="{{ request.form.get('serial_number', '') }}">
+    </div>
+
+    <!-- Production Count -->
+    <div class="mb-3">
+      <label for="production_count" class="form-label">Production Count</label>
+      <input type="number" name="production_count" class="form-control" id="production_count" value="{{ request.form.get('production_count', '') }}">
+    </div>
+
+    <!-- Purchase Price -->
+    <div class="mb-3">
+      <label for="purchase_price" class="form-label">Purchase Price</label>
+      <input type="number" name="purchase_price" class="form-control" id="purchase_price" value="{{ request.form.get('purchase_price', '') }}">
+    </div>
+
+    <!-- Purchase Platform -->
+    <div class="mb-3">
+      <label for="purchase_platform" class="form-label">Purchase Platform</label>
+      <input type="text" name="purchase_platform" class="form-control" id="purchase_platform" value="{{ request.form.get('purchase_platform', '') }}">
+    </div>
+
+    <!-- Purchase Year -->
+    <div class="mb-3">
+      <label for="purchase_year" class="form-label">Purchase Year</label>
+      <select name="purchase_year" class="form-select" id="purchase_year">
+        <option value="">-- Select Year --</option>
+        {% for year in range(2000, current_year) %}
+          <option value="{{ year }}" {% if request.form.get('purchase_year', '')|int == year %}selected{% endif %}>
+            {{ year }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Purchase Month -->
+    <div class="mb-3">
+      <label for="purchase_month" class="form-label">Purchase Month</label>
+      <select name="purchase_month" class="form-select" id="purchase_month">
+        <option value="">-- Select Month --</option>
+        {% for month in range(1, 13) %}
+          <option value="{{ month }}" {% if request.form.get('purchase_month', '')|int == month %}selected{% endif %}>
+            {{ month }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Is Sold -->
+    <div class="mb-3 form-check">
+      <input type="checkbox" class="form-check-input" id="is_sold" name="is_sold" value="1">
+      <label class="form-check-label" for="is_sold">Is Sold</label>
+    </div>
+
+    <!-- Sold Price -->
+    <div class="mb-3">
+      <label for="sold_price" class="form-label">Sold Price</label>
+      <input type="number" name="sold_price" class="form-control" id="sold_price" value="{{ request.form.get('sold_price', '') }}">
+    </div>
+
+    <!-- Sold Platform -->
+    <div class="mb-3">
+      <label for="sold_platform" class="form-label">Sold Platform</label>
+      <input type="text" name="sold_platform" class="form-control" id="sold_platform" value="{{ request.form.get('sold_platform', '') }}">
+    </div>
+
+    <!-- Sold Year -->
+    <div class="mb-3">
+      <label for="sold_year" class="form-label">Sold Year</label>
+      <select name="sold_year" class="form-select" id="sold_year">
+        <option value="">-- Select Year --</option>
+        {% for year in range(2000, current_year) %}
+          <option value="{{ year }}" {% if request.form.get('sold_year', '')|int == year %}selected{% endif %}>
+            {{ year }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Sold Month -->
+    <div class="mb-3">
+      <label for="sold_month" class="form-label">Sold Month</label>
+      <select name="sold_month" class="form-select" id="sold_month">
+        <option value="">-- Select Month --</option>
+        {% for month in range(1, 13) %}
+          <option value="{{ month }}" {% if request.form.get('sold_month', '')|int == month %}selected{% endif %}>
+            {{ month }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a class="btn btn-secondary" href="{{ url_for('main.index') }}">Back</a>
+</form>
+{% endblock %}

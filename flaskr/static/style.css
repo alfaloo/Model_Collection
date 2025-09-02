@@ -76,27 +76,27 @@ hr {
   border: 1px solid #377ba8;
 }
 
-.patient > header {
+.item > header {
   display: flex;
   align-items: flex-end;
   font-size: 0.85em;
 }
 
-.patient > header > div:first-of-type {
+.item > header > div:first-of-type {
   flex: auto;
 }
 
-.patient > header h1 {
+.item > header h1 {
   font-size: 1.5em;
   margin-bottom: 0;
 }
 
-.patient .about {
+.item .about {
   color: slategray;
   font-style: italic;
 }
 
-.patient .body {
+.item .body {
   white-space: pre-line;
 }
 
