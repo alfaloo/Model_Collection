@@ -21,6 +21,7 @@ def add_item():
         variant = request.form.get('variant', type=str)
         serial_number = request.form.get('serial_number', type=int) or None
         production_count = request.form.get('production_count', type=int) or None
+        grade = request.form.get('grade', type=int) or None
         purchase_price = request.form.get('purchase_price', type=int)
         purchase_platform = request.form.get('purchase_platform', type=str)
         purchase_year = request.form.get('purchase_year', type=int)
@@ -70,6 +71,7 @@ def add_item():
                             variant=variant,
                             serial_number=serial_number,
                             production_count=production_count,
+                            grade=grade,
                             purchase_price=purchase_price,
                             purchase_platform=purchase_platform,
                             purchase_year=purchase_year,
@@ -101,6 +103,7 @@ def update_item(item_id):
         variant = request.form.get('variant', type=str)
         serial_number = request.form.get('serial_number', type=int) or None
         production_count = request.form.get('production_count', type=int) or None
+        grade = request.form.get('grade', type=int) or None
         purchase_price = request.form.get('purchase_price', type=int)
         purchase_platform = request.form.get('purchase_platform', type=str)
         purchase_year = request.form.get('purchase_year', type=int)
@@ -150,6 +153,7 @@ def update_item(item_id):
             item.variant = variant
             item.serial_number = serial_number
             item.production_count = production_count
+            item.grade = grade
             item.purchase_price = purchase_price
             item.purchase_platform = purchase_platform
             item.purchase_year = purchase_year

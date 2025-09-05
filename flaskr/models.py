@@ -23,6 +23,7 @@ class Item(db.Model):
     variant = db.Column(db.String(32), nullable=False)
     serial_number = db.Column(db.Integer, nullable=True)
     production_count = db.Column(db.Integer, nullable=True)
+    grade = db.Column(db.Integer, nullable=True)
     purchase_price = db.Column(db.Integer, nullable=False)
     purchase_platform = db.Column(db.String(32), nullable=False)
     purchase_year = db.Column(db.Integer, nullable=False)

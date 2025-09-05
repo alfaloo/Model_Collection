@@ -35,11 +35,12 @@ def search():
     variant = request.args.get('variant', type=str) or None
     serial_number = request.args.get('serial_number', type=int) or None
     production_count = request.args.get('production_count', type=int) or None
+    grade = request.args.get('grade', type=str) or None
     purchase_price = request.args.get('purchase_price', type=int) or None
     purchase_platform = request.args.get('purchase_platform', type=str) or None
     purchase_year = request.args.get('purchase_year', type=int) or None
     purchase_month = request.args.get('purchase_month', type=int) or None
-    is_sold = request.args.get('is_sold', type=bool) or None
+    is_sold = request.args.get('is_sold', type=str) or None
     sold_price = request.args.get('sold_price', type=int) or None
     sold_platform = request.args.get('sold_platform', type=str) or None
     sold_year = request.args.get('sold_year', type=int) or None
@@ -51,7 +52,7 @@ def search():
         is_sold = False
 
     builder = Item.query.order_by(Item.brand)
-
+    print(grade)
     if brand:
         builder = builder.filter(Item.brand.ilike(f"%{brand}%"))
     if make:
@@ -64,6 +65,11 @@ def search():
         builder = builder.filter_by(serial_number=serial_number)
     if production_count:
         builder = builder.filter_by(production_count=production_count)
+    if grade:
+        if grade == 'None':
+            builder = builder.filter(Item.grade.is_(None))
+        else:
+            builder = builder.filter_by(grade=int(grade))
     if purchase_price:
         builder = builder.filter_by(purchase_price=purchase_price)
     if purchase_platform:
@@ -72,7 +78,7 @@ def search():
         builder = builder.filter_by(purchase_year=purchase_year)
     if purchase_month:
         builder = builder.filter_by(purchase_month=purchase_month)
-    if is_sold:
+    if is_sold != None:
         builder = builder.filter_by(is_sold=is_sold)
     if sold_price:
         builder = builder.filter_by(sold_price=sold_price)
