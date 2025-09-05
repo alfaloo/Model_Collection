@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-<title>{% block title %}{% endblock %} - IEx</title>
+<title>{% block title %}{% endblock %} - Model Collection</title>
 <!--<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">-->
 <meta data-key="viewport" name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}">
@@ -11,9 +11,9 @@
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #6c757d;">
   <div class="container-fluid">
 
-    <a href="{{ url_for('main.index') }}" class="navbar-brand">
+    <!-- <a href="{{ url_for('main.index') }}" class="navbar-brand">
       <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="" width="30" height="24" class="d-inline-block align-text-top">
-    </a>
+    </a> -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -22,7 +22,7 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         {% if g.user %}
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{{ url_for('main.index') }}">ImpactExperience</a>
+          <a class="nav-link active" aria-current="page" href="{{ url_for('main.index') }}">Model Collection</a>
         </li>
         {% endif %}
       </ul>

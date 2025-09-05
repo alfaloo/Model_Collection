@@ -67,7 +67,7 @@
       <label for="purchase_year" class="form-label">Purchase Year</label>
       <select name="purchase_year" class="form-select" id="purchase_year">
         <option value="">-- Select Year --</option>
-        {% for year in range(2000, current_year) %}
+        {% for year in range(2024, current_year) %}
           <option value="{{ year }}" {% if request.args.get('purchase_year', default='')|int == year %}selected{% endif %}>
             {{ year }}
           </option>
@@ -117,7 +117,7 @@
       <label for="sold_year" class="form-label">Sold Year</label>
       <select name="sold_year" class="form-select" id="sold_year">
         <option value="">-- Select Year --</option>
-        {% for year in range(2000, current_year) %}
+        {% for year in range(2024, current_year) %}
           <option value="{{ year }}" {% if request.args.get('sold_year', default='')|int == year %}selected{% endif %}>
             {{ year }}
           </option>

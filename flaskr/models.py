@@ -42,7 +42,7 @@ class Comment(db.Model):
     item_id = db.Column(db.Integer, db.ForeignKey('item.id', ondelete='CASCADE'), nullable=False)
     created = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     category = db.Column(db.String(32), nullable=False)
-    description = db.Column(db.Text, nullable=True)
+    description = db.Column(db.Text, nullable=False)
 
     def __repr__(self):
         return f'<Comment {self.id}>'
