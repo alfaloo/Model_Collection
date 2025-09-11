@@ -19,6 +19,7 @@ def add_item():
         make = request.form.get('make', type=str)
         model = request.form.get('model', type=str)
         variant = request.form.get('variant', type=str)
+        scale = request.form.get('scale', type=str)
         serial_number = request.form.get('serial_number', type=int) or None
         production_count = request.form.get('production_count', type=int) or None
         grade = request.form.get('grade', type=int) or None
@@ -41,6 +42,8 @@ def add_item():
             error = 'Model is required.'
         elif not variant:
             error = 'Variant is required.'
+        elif not scale:
+            error = 'Scale is required.'
         elif not purchase_price:
             error = 'Purchase price is required.'
         elif not purchase_platform:
@@ -69,6 +72,7 @@ def add_item():
                             make=make,
                             model=model,
                             variant=variant,
+                            scale=scale,
                             serial_number=serial_number,
                             production_count=production_count,
                             grade=grade,
@@ -101,6 +105,7 @@ def update_item(item_id):
         make = request.form.get('make', type=str)
         model = request.form.get('model', type=str)
         variant = request.form.get('variant', type=str)
+        scale = request.form.get('scale', type=str)
         serial_number = request.form.get('serial_number', type=int) or None
         production_count = request.form.get('production_count', type=int) or None
         grade = request.form.get('grade', type=int) or None
@@ -123,6 +128,8 @@ def update_item(item_id):
             error = 'Model is required.'
         elif not variant:
             error = 'Variant is required.'
+        elif not scale:
+            scale = 'Scale is required.'
         elif not purchase_price:
             error = 'Purchase price is required.'
         elif not purchase_platform:
@@ -151,6 +158,7 @@ def update_item(item_id):
             item.make = make
             item.model = model
             item.variant = variant
+            item.scale = scale
             item.serial_number = serial_number
             item.production_count = production_count
             item.grade = grade

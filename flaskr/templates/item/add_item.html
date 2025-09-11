@@ -30,6 +30,17 @@
       <input type="text" name="variant" class="form-control" id="variant" value="{{ request.form.get('variant', '') }}">
     </div>
 
+    <!-- Scale -->
+    <div class="mb-3">
+      <label for="scale" class="form-label">Scale</label>
+      <select name="scale" class="form-select" id="scale">
+        <option value="">-- Select Scale --</option>
+        <option value="1/18" {% if request.form.get('scale', '')|int == "1/18" %}selected{% endif %}>1/18</option>
+        <option value="1/18" {% if request.form.get('scale', '')|int == "1/43" %}selected{% endif %}>1/43</option>
+        <option value="1/18" {% if request.form.get('scale', '')|int == "1/64" %}selected{% endif %}>1/64</option>
+      </select>
+    </div>
+
     <!-- Serial Number -->
     <div class="mb-3">
       <label for="serial_number" class="form-label">Serial Number</label>

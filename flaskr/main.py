@@ -33,6 +33,7 @@ def search():
     make = request.args.get('make', type=str) or None
     model = request.args.get('model', type=str) or None
     variant = request.args.get('variant', type=str) or None
+    scale = request.args.get('scale', type=str) or None
     serial_number = request.args.get('serial_number', type=int) or None
     production_count = request.args.get('production_count', type=int) or None
     grade = request.args.get('grade', type=str) or None
@@ -61,6 +62,8 @@ def search():
         builder = builder.filter(Item.model.ilike(f"%{model}%"))
     if variant:
         builder = builder.filter(Item.variant.ilike(f"%{variant}%"))
+    if scale:
+        builder = builder.filter(Item.scale.ilike(f"%{scale}%"))
     if serial_number:
         builder = builder.filter_by(serial_number=serial_number)
     if production_count:

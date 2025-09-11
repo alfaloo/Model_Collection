@@ -22,8 +22,8 @@
       <a class="card-body text-decoration-none" href="{{ url_for('item.view_item', item_id=item.id) }}">
         <h3 class="card-title">{{ item.brand }} {{ item.model }}</h3>
         <h6 class="card-subtitle mb-2 text-body-secondary">Variant: {{ item.variant }}</h6>
+        <h6 class="card-subtitle mb-2 text-body-secondary">Scale: {{ item.scale }}</h6>
         <h6 class="card-subtitle mb-2 text-body-secondary">Grade: {{ item.grade }}</h6>
-        <h6 class="card-subtitle mb-2 text-body-secondary">Price: {{ item.purchase_price }}</h6>
         <h6 class="card-subtitle mb-2 text-body-secondary">Date: {{ item.purchase_year }} {{ item.purchase_month }}</h6>
         {% if g.user.is_admin %}
           <a class="btn btn-outline-primary m-3 mt-0" id="edit-button" href="{{ url_for('item.update_item', item_id=item.id) }}">Edit</span></a>

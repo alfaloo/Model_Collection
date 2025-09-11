@@ -21,6 +21,7 @@ class Item(db.Model):
     make = db.Column(db.String(32), nullable=False)
     model = db.Column(db.String(32), nullable=False)
     variant = db.Column(db.String(32), nullable=False)
+    scale = db.Column(db.String(8), nullable=False)
     serial_number = db.Column(db.Integer, nullable=True)
     production_count = db.Column(db.Integer, nullable=True)
     grade = db.Column(db.Integer, nullable=True)
