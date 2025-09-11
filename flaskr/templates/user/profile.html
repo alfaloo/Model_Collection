@@ -3,7 +3,7 @@
 {% block header %}
   <div class="row my-3">
     <div class="col-3 col-md-2">
-      <img src="https://source.boringavatars.com/beam/160/{{ user.id }}?colors=65cccc,ffcc66,cc99cc,99cc99,f99156" alt="Boring Avatar" style="max-width: 100%;">
+      <img src="https://api.dicebear.com/9.x/thumbs/svg?seed={{ user.id }}&radius=10" alt="avatar"/>
     </div>
     <div class="col-6 d-flex align-items-center">
       <div class="d-flex flex-column align-items-left">
@@ -12,31 +12,35 @@
       </div>
     </div>
   </div>
+  <h6 class="text-body-secondary">Count: <b> {{ my_items }} </b> (mine), <b> {{ sold_items }} </b> (sold)</h6>
+  <h6 class="text-body-secondary">Value: <b> {{ total_purchase_value }} </b> (bought), <b> {{ total_sale_value }} </b> (sold)</h6>
+  <h6 class="text-body-secondary">Net Spend: <b> {{ total_purchase_value - total_sale_value }} </b></h6>
 {% endblock %}
 
   {% block content %}
     <div>
-    <h1 class="my-3">comment History</h1>
+    <h1 class="my-3">Comment History</h1>
     {% for d in comment %}
     <article class="item">
       <header>
         <div class="card mb-4">
           <div class="card-body">
+
             <div class="row">
               <div class="col-8">
-                  <h2 class="fs2-text">{{ d[1]['name'] }}</h2>
+                  <h3 class="fs2-text">{{ d[0]['category'] }}</h3>
               </div>
               <div class="col-4">
                   <div class="d-grid gap-2 d-flex justify-content-end">
-                      {% if g.user.id == d[0]['author_id'] %}
+                      {% if g.user.id == d[0].author_id %}
                         <a class="btn btn-outline-primary" href="{{ url_for('comment.update_comment', comment_id=d[0]['id']) }}">Edit</a>
                       {% endif %}
                   </div>
               </div>
             </div>
-            <h3 class="fs2-text">{{ d[0]['category'] }}</h3>
+
             <h6 class="card-subtitle mb-2 text-body-secondary">{{ d[0]['description'] }}</h6>
-            <div class="about">by {{ user.username }} on {{ d[0]['created'].strftime('%Y-%m-%d') }}</div>
+            <div class="about">by {{ d[1]['username'] }} on {{ d[0]['created'].strftime('%Y-%m-%d') }}</div>
           </div>
         </div>
       </header>

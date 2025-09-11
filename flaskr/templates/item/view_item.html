@@ -7,6 +7,9 @@
     </div>
     <div class="col-6">
       <div class="my-3 d-grid gap-2 d-flex justify-content-end">
+        {% if g.user.is_admin %}
+          <a class="btn btn-outline-primary" id="edit-button" href="{{ url_for('item.update_item', item_id=item.id) }}">Edit</span></a>
+        {% endif %}
         <a class="btn btn-primary" href="{{ url_for('comment.add_comment', item_id=item.id) }}">New comment</a>
       </div>
     </div>

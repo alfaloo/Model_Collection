@@ -1,6 +1,7 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
+from sqlalchemy import func
 from werkzeug.security import generate_password_hash
 from werkzeug.exceptions import abort
 from .pagination_collection import PaginationCollection
@@ -35,7 +36,29 @@ def profile():
 
     pagination_collection = PaginationCollection(builder, page)
 
-    return render_template('user/profile.html', user=g.user, comment=pagination_collection.items, pagination=pagination_collection.pagination)
+    # ---- Aggregate stats for items ----
+    total_items = db.session.query(func.count(Item.id)).scalar()
+
+    total_purchase_value = db.session.query(func.coalesce(func.sum(Item.purchase_price), 0)).scalar()
+
+    sold_items = db.session.query(func.count()).filter(Item.is_sold == True).scalar()
+
+    total_sale_value = db.session.query(
+        func.coalesce(func.sum(Item.sold_price), 0)
+    ).filter(Item.is_sold == True).scalar()
+
+    my_items = total_items - sold_items
+
+    return render_template(
+        'user/profile.html',
+        user=g.user,
+        comment=pagination_collection.items,
+        pagination=pagination_collection.pagination,
+        my_items=my_items,
+        sold_items=sold_items,
+        total_purchase_value=total_purchase_value,
+        total_sale_value=total_sale_value
+    )
 
 @bp.route('/<int:id>', methods=('GET', 'POST'))
 def user_edit(id):

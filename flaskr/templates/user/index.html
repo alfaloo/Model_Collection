@@ -18,7 +18,7 @@
   {% for user in pagination_collection.items %}
     <tr>
       <th scope="row">
-        <img src="https://source.boringavatars.com/beam/60/{{ user.id }}?colors=65cccc,ffcc66,cc99cc,99cc99,f99156" alt="Boring Avatar">
+        <img src="https://api.dicebear.com/9.x/thumbs/svg?seed={{ user.id }}&size=64&radius=10" alt="avatar"/>
       </th>
       <td class="align-middle">{{ user.username }}</td>
       <td class="align-middle">{{ user.is_admin }}</td>
